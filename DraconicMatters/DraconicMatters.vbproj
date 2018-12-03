@@ -93,6 +93,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ITickable.vb" />
+    <Compile Include="PlayerAnimatedSprite.vb" />
     <Compile Include="PlayerBounds.vb" />
     <Compile Include="SerializedBitmap.vb" />
     <Compile Include="ThreadWatcher.vb" />
