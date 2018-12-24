@@ -24,14 +24,20 @@
     End Sub
 
     Public Shared Sub DrawSprite(sprite As AnimatedSprite)
-        DrawBitmap(sprite.Bitmap, sprite.Region)
+        DrawBitmap(sprite.Bitmap, sprite.Region, sprite.FixedToScreen, sprite.ScaleToPlayer)
         If sprite.DrawCall IsNot Nothing Then
             sprite.DrawCall.Invoke(LiveViewport)
         End If
     End Sub
 
-    Public Shared Sub DrawBitmap(map As Bitmap, region As Rectangle)
+    Public Shared Sub DrawBitmap(map As Bitmap, region As Rectangle, Optional fixedToScreen As Boolean = False, Optional matchPlayerSize As Boolean = False)
+        If matchPlayerSize Then
+            region = New Rectangle(region.X, region.Y, WorldHandler.Current.Player.Width, WorldHandler.Current.Player.Height)
+        End If
         Dim source As Bitmap = Resize(map, region.Width, region.Height)
+        If Not fixedToScreen Then
+            region = New Rectangle(region.X - WorldHandler.Current.Player.XPos, region.Y - WorldHandler.Current.Player.YPos, region.Width, region.Height)
+        End If
         For i As Integer = 0 To region.Width - 1
             For j As Integer = 0 To region.Height - 1
                 If Between(0, region.X + i, LiveViewport.Width - 1) AndAlso Between(0, region.Y + j, LiveViewport.Height - 1) Then
@@ -44,8 +50,20 @@
         Next
     End Sub
 
+    Public Shared Function Flip(original As Bitmap) As Bitmap
+        Dim result As Bitmap = original.Clone(New Rectangle(0, 0, original.Width, original.Height), Imaging.PixelFormat.Format32bppArgb)
+        For i As Integer = 0 To original.Width - 1
+            For j As Integer = 0 To original.Height - 1
+                result.SetPixel((original.Width - 1) - i, j, original.GetPixel(i, j))
+            Next
+        Next
+        Return result
+    End Function
+
     Public Shared Function Resize(img As Bitmap, width As Integer, height As Integer) As Bitmap
         If img.Width = width And img.Height = height Then
+            Return img
+        ElseIf width = 0 Or height = 0 Then
             Return img
         End If
 

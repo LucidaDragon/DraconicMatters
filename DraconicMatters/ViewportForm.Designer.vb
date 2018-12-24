@@ -39,17 +39,18 @@ Partial Class ViewportForm
         '
         Me.EngineContextMenu.BackColor = System.Drawing.Color.White
         Me.EngineContextMenu.DropShadowEnabled = False
+        Me.EngineContextMenu.ImageScalingSize = New System.Drawing.Size(32, 32)
         Me.EngineContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EngineSettingsToolStripMenuItem})
         Me.EngineContextMenu.Name = "EngineContextMenu"
         Me.EngineContextMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
         Me.EngineContextMenu.ShowImageMargin = False
         Me.EngineContextMenu.ShowItemToolTips = False
-        Me.EngineContextMenu.Size = New System.Drawing.Size(131, 26)
+        Me.EngineContextMenu.Size = New System.Drawing.Size(232, 40)
         '
         'EngineSettingsToolStripMenuItem
         '
         Me.EngineSettingsToolStripMenuItem.Name = "EngineSettingsToolStripMenuItem"
-        Me.EngineSettingsToolStripMenuItem.Size = New System.Drawing.Size(130, 22)
+        Me.EngineSettingsToolStripMenuItem.Size = New System.Drawing.Size(231, 36)
         Me.EngineSettingsToolStripMenuItem.Text = "Engine Settings"
         '
         'ViewportControl1
@@ -57,20 +58,22 @@ Partial Class ViewportForm
         Me.ViewportControl1.ContextMenuStrip = Me.EngineContextMenu
         Me.ViewportControl1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ViewportControl1.Location = New System.Drawing.Point(0, 0)
+        Me.ViewportControl1.Margin = New System.Windows.Forms.Padding(12, 12, 12, 12)
         Me.ViewportControl1.Name = "ViewportControl1"
-        Me.ViewportControl1.Size = New System.Drawing.Size(584, 561)
+        Me.ViewportControl1.Size = New System.Drawing.Size(1168, 1079)
         Me.ViewportControl1.TabIndex = 0
         '
         'ViewportForm
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(12.0!, 25.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.Black
-        Me.ClientSize = New System.Drawing.Size(584, 561)
+        Me.ClientSize = New System.Drawing.Size(1168, 1079)
         Me.ContextMenuStrip = Me.EngineContextMenu
         Me.Controls.Add(Me.ViewportControl1)
         Me.DoubleBuffered = True
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.Margin = New System.Windows.Forms.Padding(6, 6, 6, 6)
         Me.Name = "ViewportForm"
         Me.Text = "Draconic Matters"
         Me.EngineContextMenu.ResumeLayout(False)

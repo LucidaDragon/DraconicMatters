@@ -172,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="OrangeHD.ico" />
+    <None Include="Resources\Mountains.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

@@ -11,22 +11,35 @@
     End Enum
 
     Private Sub DrawTimer_Tick(sender As Object, e As EventArgs) Handles DrawTimer.Tick
-        TickHandler.GlobalTick(Paused)
+        DrawTimer.Interval = Math.Min(Math.Max(TickHandler.GlobalTick(Paused), 33), 100)
         DrawHandler.Draw()
         ViewportControl1.Invalidate()
     End Sub
 
     Private Sub ViewportForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ThreadWatcher.Assign()
-        WorldHandler.Init(0, 0, 64, 64)
+        WorldHandler.Init({Me, ViewportControl1}, 0, 0, 64, 64)
         DrawHandler.Init(Viewport)
 
-        Dim rolloutSprite As New AnimatedSprite
-        rolloutSprite.FromZip(My.Resources.Steph)
-        rolloutSprite.Region = New Rectangle(0, 0, rolloutSprite.Bitmap.Width, rolloutSprite.Bitmap.Height)
-        rolloutSprite.Speed = 2
-        Paused = False
+        Dim mountains As New AnimatedSprite With {
+            .Speed = 0,
+            .FixedToScreen = False
+        }
+        mountains.FromImage(My.Resources.Mountains)
+        mountains.Region = New Rectangle(0, 0, Viewport.Width, Viewport.Height)
 
+
+        Dim playerSprite As New AnimatedSprite With {
+            .FixedToScreen = True,
+            .ScaleToPlayer = True,
+            .Region = New Rectangle((Viewport.Width / 2) - (WorldHandler.Current.Player.Width / 2), (Viewport.Height / 2) - (WorldHandler.Current.Player.Height / 2), 0, 0),
+            .PlayerInvertX = True
+        }
+        playerSprite.FromZip(My.Resources.Steph)
+        playerSprite.Speed = 2
+        playerSprite.RotateToPlayer = True
+
+        Paused = False
         Size = New Size(600, 600)
         DrawTimer.Start()
     End Sub

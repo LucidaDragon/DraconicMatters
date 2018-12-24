@@ -4,13 +4,17 @@
     Public Shared Property Current As New WorldHandler
     Private Shared XmlHost As New Xml.Serialization.XmlSerializer(GetType(WorldHandler))
 
-    Public Shared Sub Init(px As Integer, py As Integer, pwidth As Integer, pheight As Integer)
+    Public Shared Sub Init(inputSources() As Control, px As Integer, py As Integer, pwidth As Integer, pheight As Integer)
         Current.Player = New PlayerBounds With {
             .XPos = px,
             .YPos = py,
             .Width = pwidth,
             .Height = pheight
         }
+        For Each inputSource In inputSources
+            AddHandler inputSource.KeyDown, AddressOf Current.KeyDown
+            AddHandler inputSource.KeyUp, AddressOf Current.KeyUp
+        Next
     End Sub
 
     Public Shared Sub FromXml(xml As String)
@@ -18,6 +22,7 @@
     End Sub
 
     Public Property Player As PlayerBounds
+    Public Property PlayerForward As Boolean = True
     Public ReadOnly Property PlayerOverlapping As Boolean
         Get
             Dim rect As Rectangle = Player
@@ -57,25 +62,47 @@
             RightRate = value
         End Set
     End Property
-    Public Property UpRate As Double = 1
-    Public Property DownRate As Double = 1
-    Public Property LeftRate As Double = 1
-    Public Property RightRate As Double = 1
+    Public Property UpRate As Double = 50
+    Public Property DownRate As Double = 50
+    Public Property LeftRate As Double = 50
+    Public Property RightRate As Double = 50
 
     Public Property PressedKeys As New List(Of Keys)
 
     Public Property TickableWhenPaused As Boolean = False Implements ITickable.TickableWhenPaused
 
+    Sub New()
+        TickHandler.Register(Me)
+    End Sub
+
     Public Sub Input(value As Keys, deltaTimeMS As Double)
         deltaTimeMS /= 1000
         If UpKeys.Contains(value) Then
+            Dim old As Double = Player.YPos
             Player.YPos -= UpRate * deltaTimeMS
+            If PlayerOverlapping Then
+                Player.YPos = old
+            End If
         ElseIf DownKeys.Contains(value) Then
+            Dim old As Double = Player.YPos
             Player.YPos += DownRate * deltaTimeMS
+            If PlayerOverlapping Then
+                Player.YPos = old
+            End If
         ElseIf LeftKeys.Contains(value) Then
+            Dim old As Double = Player.XPos
             Player.XPos -= LeftRate * deltaTimeMS
+            If PlayerOverlapping Then
+                Player.XPos = old
+            End If
+            PlayerForward = False
         ElseIf RightKeys.Contains(value) Then
+            Dim old As Double = Player.XPos
             Player.XPos += RightRate * deltaTimeMS
+            If PlayerOverlapping Then
+                Player.XPos = old
+            End If
+            PlayerForward = True
         End If
     End Sub
 

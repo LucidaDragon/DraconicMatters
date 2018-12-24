@@ -7,7 +7,11 @@ Public Class AnimatedSprite
     Public ReadOnly Property Bitmap As Bitmap
         Get
             If Frames.Count > 0 Then
-                Return Frames(Math.Floor(TimePos))
+                If RotateToPlayer And WorldHandler.Current.PlayerForward Then
+                    Return FlippedFrames(Math.Floor(TimePos))
+                Else
+                    Return Frames(Math.Floor(TimePos))
+                End If
             Else
                 Return Nothing
             End If
@@ -19,8 +23,27 @@ Public Class AnimatedSprite
         End Get
     End Property
     Public Property TickableWhenPaused As Boolean = False Implements ITickable.TickableWhenPaused
+    Public Property FixedToScreen As Boolean = False
+    Public Property ScaleToPlayer As Boolean = False
+    Public Property PlayerInvertX As Boolean = False
+    Public Property RotateToPlayer As Boolean
+        Get
+            Return FlippedFrames.Count > 0
+        End Get
+        Set(value As Boolean)
+            If value Then
+                FlippedFrames.Clear()
+                For Each elem In Frames
+                    FlippedFrames.Add(DrawHandler.Flip(elem))
+                Next
+            Else
+                FlippedFrames.Clear()
+            End If
+        End Set
+    End Property
     Public Property Speed As Double = 1
     Public Property Frames As New List(Of SerializedBitmap)
+    Private Property FlippedFrames As New List(Of SerializedBitmap)
     Public Property SpriteZ As Integer = 0
     Public Property Region As New Rectangle
     Public Property DrawCall As Action(Of Bitmap)
